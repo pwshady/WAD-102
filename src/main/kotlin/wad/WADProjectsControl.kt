@@ -1,0 +1,4 @@
+package wad
+
+class WADProjectsControl {
+}
