@@ -1,8 +1,14 @@
 package visual
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import tornadofx.*
 import kotlin.concurrent.thread
 
@@ -59,8 +65,13 @@ class CustomerModel : Controller(){
 
 class CustomerVievModel : ItemViewModel<Customer>(){
     val  customerModel : CustomerModel by inject()
-    //private val retrofit : Retrofit = Retrofit.Builder()
+    private val retrofit : Retrofit = Retrofit.Builder().baseUrl("https://translate.yandex.net")
+        .addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
     fun refresh(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val result =
+        }
         runAsync{
 
             thread {
