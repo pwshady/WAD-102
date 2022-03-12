@@ -1,15 +1,20 @@
 package visual
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.sun.javafx.iio.common.ScalerFactory
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import tornadofx.*
+import wad.TranslateService
+
 import kotlin.concurrent.thread
 
 class WADProjectViev : Fragment() {
@@ -31,7 +36,7 @@ class WADProjectViev : Fragment() {
                     println(request.text)
                     status = true
                     println(status)
-                    customerVievModel.refresh()
+                    customerVievModel.refresh(request.text)
                 }
             }
 
@@ -63,23 +68,27 @@ class CustomerModel : Controller(){
 
 }
 
-class CustomerVievModel : ItemViewModel<Customer>(){
+class CustomerVievModel() : ItemViewModel<Customer>(){
     val  customerModel : CustomerModel by inject()
-    private val retrofit : Retrofit = Retrofit.Builder().baseUrl("https://translate.yandex.net")
+    private val retrofit : Retrofit = Retrofit.Builder().baseUrl("https://api.domainsdb.info")
         .addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
-    fun refresh(){
-        CoroutineScope(Dispatchers.IO).launch {
-            val result =
-        }
+    private val service = retrofit.create(TranslateService::class.java)
+    fun refresh(req : String){
         runAsync{
 
             thread {
                 for (i in 1..5){
-                updateProgress(i.toDouble(),5.0)
-                Thread.sleep(1000)
-            }}
-        } ui {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val result = service.translate().await()
+                        println(result)
+
+                    }
+                    updateProgress(i.toDouble(),5.0)
+                    Thread.sleep(1000)
+                }
+            }
+        } ui { println("compite")
 
         }
     }
