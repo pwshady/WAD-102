@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 
 
 class CreateProject(domenName : String, projectName : String, path : String) {
@@ -14,7 +15,7 @@ class CreateProject(domenName : String, projectName : String, path : String) {
         println(projectName)
     }
     init{
-        val retrofit : Retrofit = Retrofit.Builder().baseUrl("https://web.archive.org/cdx/search/cdx?url=roboscan.ru&output=json")
+        val retrofit : Retrofit = Retrofit.Builder().baseUrl("https://web.archive.org")
             .addConverterFactory(ScalarsConverterFactory.create()).addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
