@@ -1,6 +1,3 @@
 package wad
 
-data class TranslateResult (
-    val success : String,
-    val license : String
-    )
+data class TranslateResult (val hhuu : String)

@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import tornadofx.*
+import wad.CreateProject
 import wad.TranslateService
 
 import kotlin.concurrent.thread
@@ -46,6 +47,7 @@ class WADProjectViev : Fragment() {
                     println(request.text)
                     status = false
                     println(status)
+                    val pr = CreateProject("ss","dd","ff")
                 }
             }
         }
