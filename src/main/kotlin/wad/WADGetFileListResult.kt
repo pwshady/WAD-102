@@ -3,7 +3,7 @@ package wad
 import com.google.gson.annotations.SerializedName
 
 data class WADGetFileListResult(
- val arrayList: ArrayList<Statistics>
+ val res : String
 )
 
 data class Statistics(

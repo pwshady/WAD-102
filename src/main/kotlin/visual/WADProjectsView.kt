@@ -13,19 +13,20 @@ class WADProjectsView() : View() {
         println(projectList)
         center = tabpane(){
             for (i in 0..projectList.size-1){
-                tab(projectList[i]) {
-                    this += WADProjectViev::class
+                tab(projectList[i].name) {
+                    this += WADProjectViev(projectList[i])
                 }
             }
         }
         right = vbox {
             button("Press Me"){
-                action {  }
-                //textFill = javafx.scene.paint.Color.RED
-                //action { this.textFill = javafx.scene.paint.Color.GREEN }
+                action {
+                    find<WADOpenProjects>().openWindow(owner = null)
+                }
 
             }
             button("t1").action {
+                find<WADCreareProject>().openWindow(owner = null)
 
             }
         }

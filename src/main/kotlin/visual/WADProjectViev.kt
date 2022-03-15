@@ -5,6 +5,7 @@ import com.sun.javafx.iio.common.ScalerFactory
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.scene.Parent
+import jdbc.WADProject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ import wad.TranslateService
 
 import kotlin.concurrent.thread
 
-class WADProjectViev : Fragment() {
+class WADProjectViev(wad : WADProject) : Fragment() {
     val condition : TaskStatus by inject()
     val customerVievModel : CustomerVievModel by inject()
     override val root: Parent = borderpane {
@@ -29,7 +30,7 @@ class WADProjectViev : Fragment() {
 
         top = hbox {
             combobox(selectedType, typeRequest)
-            val request = textfield()
+            val request = textfield(wad.domenName)
             button("Start") {
 
                 action {

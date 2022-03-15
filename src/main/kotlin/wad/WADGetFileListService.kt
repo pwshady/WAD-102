@@ -2,11 +2,14 @@ package wad
 
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 
 interface WADGetFileListService {
-    @GET("/cdx/search/cdx?url=archive.org&limit=5&output=json")
+    @GET("/cdx/search/cdx?fl=timestamp,original,mimetype,statuscode,length&showResumeKey=true")
     fun getFileList(
-        //@Query("domain") domain :String
+        @Query("url") url : String,
+        @Query("limit") lim : Int,
+        @Query("resumeKey") resumeKey : String
     ) : Deferred<String>
 }
