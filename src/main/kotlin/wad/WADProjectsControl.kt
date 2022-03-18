@@ -13,7 +13,7 @@ fun main()
 {
     println("1")
     val dao = WADProjectsDao()
-    val projectList = dao.getOpenWadProjects()
+    val projectList = dao.getOpenWADProjects()
     println(projectList)
     launch<WADProjecstApp>()
     println("2")

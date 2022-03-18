@@ -10,7 +10,7 @@ import tornadofx.observable
 class WADOpenProjects : Fragment() {
     override val root: Parent = hbox {
         val dao = WADProjectsDao()
-        val allProjects = dao.getAllWADProject().observable()
+        val allProjects = dao.getAllWADProjectsName().observable()
         listview(allProjects) {  }
     }
 }

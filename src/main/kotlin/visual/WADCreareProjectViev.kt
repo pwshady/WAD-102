@@ -1,19 +1,21 @@
 package visual
 
-import io.reactivex.Observable
+import com.sun.jndi.toolkit.url.Uri
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.Parent
 import javafx.scene.control.DatePicker
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
-import javafx.scene.paint.Color
-import javafx.util.converter.LocalDateStringConverter
+import jdbc.WADProjectsDao
 import tornadofx.*
 import validation.ValidationProject
+import java.io.File
+import java.net.URI
+import java.nio.file.Files
+import java.nio.file.Path
+import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.math.max
 
 class WADCreareProjectViev : Fragment() {
     override val root: Parent = form {
@@ -26,28 +28,46 @@ class WADCreareProjectViev : Fragment() {
         var dateTo : DatePicker by singleAssign()
         var directory : TextField by singleAssign()
         var errorList : TextArea by singleAssign()
-        var errorText = MutableList(5,{Pair("",0)})
+        var errorText = MutableList(6,{Pair("",0)})
         val dateFromValue = SimpleObjectProperty<LocalDate>()
         val dateToValue = SimpleObjectProperty<LocalDate>()
+        val sdf = SimpleDateFormat("yyyyMMddHHmmss")
         val min = "19970101000000"
-        val max ="20221230000000"
+        var max = sdf.format(Date())
+        try {
+            val dao = WADProjectsDao()
+        } catch (e:Exception){
+
+        } finally {
+
+        }
         fun statusUpdating (errorText : List<Pair<String,Int>>):Unit
         {
             errorList.textProperty().set(errorText.map { task -> task.first }.joinToString(separator =""))
-            var errorCode = errorText.map { task -> task.second }.maxOrNull()
-            println(errorCode)
+            when (errorText.map { task -> task.second }.maxOrNull()){
+                0 -> errorList.style{
+                    backgroundColor += c("green")
+                }
+                1 -> errorList.style{
+                    backgroundColor += c("yellow")
+                }
+                2 -> errorList.style{
+                    backgroundColor += c("red")
+                }
+            }
         }
         fieldset("Create project") {
             field("Project name") {
                 name = textfield()
                 errorText.set(0, Pair(ValidationProject.nameValidation(name.text).first,ValidationProject.nameValidation(name.text).second))
-                name.focusedProperty().onChange {
-                    println("on")
-                }
                 name.textProperty().onChange {
                     errorText.set(0, Pair(ValidationProject.nameValidation(name.text).first,ValidationProject.nameValidation(name.text).second))
                     if (dirFlag){
                         directory.text = "c:\\wad\\${name.text}"
+                    }
+                    val dao = WADProjectsDao()
+                    if(name.text in dao.getAllWADProjectsName()){
+                        errorText.set(0, Pair("A project with that name already exists. The data will be lost",1))
                     }
                     statusUpdating(errorText);
                 }
@@ -94,15 +114,18 @@ class WADCreareProjectViev : Fragment() {
                     }
                     button("max") {
                         action {
+                            max = sdf.format(Date())
                             to.text = max
                         }
                     }
                     dateTo.valueProperty().onChange {
                         to.text = "${dateTo.value.toString().replace("-","")}000000"
+                        max = sdf.format(Date())
                     }
                     errorText.set(3, Pair(ValidationProject.dateTimeValidation(to.text,"",max,"to")
                         .first,ValidationProject.dateTimeValidation(to.text,"",max, "to").second))
                     to.textProperty().onChange {
+                        max = sdf.format(Date())
                         errorText.set(3, Pair(ValidationProject.dateTimeValidation(to.text,"",max,"to")
                             .first,ValidationProject.dateTimeValidation(to.text,"",max, "to").second))
                         statusUpdating(errorText);
@@ -125,16 +148,15 @@ class WADCreareProjectViev : Fragment() {
                     directory.textProperty().onChange {
                         errorText.set(4, Pair(ValidationProject.directotyValidation(directory.text)
                             .first,ValidationProject.directotyValidation(directory.text).second))
+                        val dir = File(directory.text)
+                        if(dir.isDirectory){
+                            errorText.set(4, Pair("A directory with that name already exists. The operation of the program may not be correct",1))
+                        }
                         statusUpdating(errorText);
                     }
                 }
             }
             errorList = textarea(){
-                style{
-                    fontSize = 20.px
-                    backgroundColor += c("red")
-                    textFill = c("black")
-                }
             }
             errorList.disableProperty().set(true)
             statusUpdating(errorText);
@@ -144,7 +166,8 @@ class WADCreareProjectViev : Fragment() {
         hbox {
             button("Create") {
                 setOnAction {
-                    errorList.textProperty().set(errorText.toString())
+                    val dir = File(directory.text)
+                    dir.mkdirs()
                 }
             }
             button("Cancel") {

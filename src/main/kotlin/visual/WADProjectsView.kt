@@ -9,7 +9,7 @@ class WADProjectsView() : View() {
     override val root: Parent = borderpane() {
         println("3")
         val dao = WADProjectsDao()
-        val projectList = dao.getOpenWadProjects()
+        val projectList = dao.getOpenWADProjects()
         println(projectList)
         center = tabpane(){
             for (i in 0..projectList.size-1){
