@@ -1,5 +1,7 @@
 package validation
 
+import java.util.*
+
 
 class ValidationProject {
     companion object {
@@ -51,6 +53,17 @@ class ValidationProject {
                         }
                     }
                 }
+                return Pair("",0)
+            }
+        }
+        fun directotyValidation(text : String) : Pair<String,Int>
+        {
+            val regex = "^[A-Za-z0-9:]*\$".toRegex()
+            if (text == ""){
+                return Pair("The directory field should not be empty\n",2)
+            } else if (!regex.matches(text.replace("\\",""))) {
+                return Pair("Invalid directory path\n",2)
+            } else {
                 return Pair("",0)
             }
         }

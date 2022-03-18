@@ -17,6 +17,7 @@ import kotlin.math.max
 
 class WADCreareProjectViev : Fragment() {
     override val root: Parent = form {
+        var dirFlag = true
         var name : TextField by singleAssign()
         var domenName : TextField by singleAssign()
         var from : TextField by singleAssign()
@@ -33,6 +34,8 @@ class WADCreareProjectViev : Fragment() {
         fun statusUpdating (errorText : List<Pair<String,Int>>):Unit
         {
             errorList.textProperty().set(errorText.map { task -> task.first }.joinToString(separator =""))
+            var errorCode = errorText.map { task -> task.second }.maxOrNull()
+            println(errorCode)
         }
         fieldset("Create project") {
             field("Project name") {
@@ -43,6 +46,9 @@ class WADCreareProjectViev : Fragment() {
                 }
                 name.textProperty().onChange {
                     errorText.set(0, Pair(ValidationProject.nameValidation(name.text).first,ValidationProject.nameValidation(name.text).second))
+                    if (dirFlag){
+                        directory.text = "c:\\wad\\${name.text}"
+                    }
                     statusUpdating(errorText);
                 }
             }
@@ -104,8 +110,24 @@ class WADCreareProjectViev : Fragment() {
                 }
             }
             field("Files directory"){
-                directory = textfield()
-                directory.disableProperty().set(true)
+                hbox {
+                    directory = textfield()
+                    button("path"){
+                        action {
+
+                        }
+                    }
+                    errorText.set(4, Pair(ValidationProject.directotyValidation(directory.text)
+                        .first,ValidationProject.directotyValidation(directory.text).second))
+                    directory.focusedProperty().onChange {
+                        dirFlag = false
+                    }
+                    directory.textProperty().onChange {
+                        errorText.set(4, Pair(ValidationProject.directotyValidation(directory.text)
+                            .first,ValidationProject.directotyValidation(directory.text).second))
+                        statusUpdating(errorText);
+                    }
+                }
             }
             errorList = textarea(){
                 style{
