@@ -7,4 +7,10 @@ data class WADProject (
     var to : String,
     var from : String,
     var path : String,
+    var status : Int = 0,
+    var resumeKey : String = "",
+    var timestamp : Int = 0,
+    var fileType : String = "",
+    var autopars : Int = 0,
+    var fileLimit : Int = 0,
 )

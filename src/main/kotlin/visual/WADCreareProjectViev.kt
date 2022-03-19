@@ -1,6 +1,5 @@
 package visual
 
-import com.sun.jndi.toolkit.url.Uri
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.Parent
 import javafx.scene.control.DatePicker
@@ -10,14 +9,11 @@ import jdbc.WADProjectsDao
 import tornadofx.*
 import validation.ValidationProject
 import java.io.File
-import java.net.URI
-import java.nio.file.Files
-import java.nio.file.Path
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
-class WADCreareProjectViev : Fragment() {
+class WADCreateProjectViev : Fragment() {
     override val root: Parent = form {
         var dirFlag = true
         var name : TextField by singleAssign()

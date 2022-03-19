@@ -2,17 +2,29 @@ package jdbc
 
 import java.sql.DriverManager
 import java.sql.PreparedStatement
-
-val url = "jdbc:mysql://localhost:3306/wad?verifyServerCertificate=false&useSSL=false&serverTimezone=UTC"
+import java.util.*
 
 class WADProjectsDao {
+    private val driver : String
+    private val url : String
+    private val user : String
+    private val pass : String
+    init{
+        val properties = Properties()
+        properties.load(Any::class.java.getResourceAsStream("/database.properties"))
+        driver = properties["driver"].toString()
+        url = properties["url"].toString()
+        user = properties["user"].toString()
+        pass = properties["pass"].toString()
+    }
     fun getWADProject(id : Int) : WADProject = TODO()
     fun saveWADProject(wadProject: WADProject ) : Unit = TODO()
     fun updateWADProject(wadProject: WADProject ) : Unit = TODO()
     fun getAllWADProjectsName() : List<String>
     {
         var resultList = mutableListOf<String>()
-        val connection = DriverManager.getConnection(url,"root", "")
+        Class.forName(driver)
+        val connection = DriverManager.getConnection(url,user, pass)
         val stmt : PreparedStatement = connection.prepareStatement("select name from all_projects")
         val rs = stmt.executeQuery()
         var wad : String? = null
@@ -23,7 +35,7 @@ class WADProjectsDao {
         }
         return resultList
     }
-    fun addProject(wadProject: WADProject, tableName : String)
+    fun addProject(wadProject: WADProject, tableName : String) : Unit
     {
 
     }
@@ -31,8 +43,8 @@ class WADProjectsDao {
     fun getOpenWADProjects() : List<WADProject>
     {
         var resultList = mutableListOf<WADProject>()
-        Class.forName("com.mysql.cj.jdbc.Driver")
-        val connection = DriverManager.getConnection(url,"root", "")
+        Class.forName(driver)
+        val connection = DriverManager.getConnection(url,user, pass)
         val stmt : PreparedStatement = connection.prepareStatement("select * from open_projects")
         val rs = stmt.executeQuery()
         var wad : WADProject? = null

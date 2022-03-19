@@ -26,7 +26,7 @@ class WADProjectsView() : View() {
 
             }
             button("t1").action {
-                find<WADCreareProjectViev>().openWindow(owner = null)
+                find<WADCreateProjectViev>().openWindow(owner = null)
 
             }
         }
